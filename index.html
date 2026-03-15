@@ -776,9 +776,37 @@
     letter-spacing:.15em;
     text-transform:uppercase;
     color:var(--cream-muted);
-    opacity:.4;
     text-align:right;
-    padding:.3rem .8rem 0;
+    padding:.4rem .8rem .2rem;
+    align-items:center;
+    justify-content:flex-end;
+    gap:.4rem;
+  }
+
+  .scroll-hint .sh-arrow{
+    display:inline-block;
+    animation:swipeHint 1.5s ease infinite;
+  }
+
+  @keyframes swipeHint{
+    0%,100%{transform:translateX(0);opacity:.4}
+    50%{transform:translateX(6px);opacity:.8}
+  }
+
+  /* Scroll fade overlay on right edge */
+  .cat-scroll-wrap{
+    position:relative;
+  }
+
+  .cat-scroll-wrap::after{
+    content:'';
+    position:absolute;
+    top:0;right:0;bottom:0;
+    width:30px;
+    background:linear-gradient(90deg, transparent, var(--black-card));
+    pointer-events:none;
+    z-index:4;
+    display:none;
   }
 
   /* ============ CONAN ============ */
@@ -946,7 +974,8 @@
     .cat-title{font-size:.6rem;letter-spacing:.2em}
     .cat-winner-badge{font-size:.45rem;padding:.15rem .4rem}
 
-    .scroll-hint{display:block}
+    .scroll-hint{display:flex}
+    .cat-scroll-wrap::after{display:block}
 
     .deco-divider .line{width:40px}
 
@@ -1064,7 +1093,10 @@ const players = [
   { name: "Chelsey Winder", short: "Chelsey" },
   { name: "Marisa Kendall", short: "Marisa" },
   { name: "Jordan Paul", short: "Jordan" },
-  { name: "Riley deFaria", short: "Riley" }
+  { name: "Riley deFaria", short: "Riley" },
+  { name: "Marg Haines", short: "Marg" },
+  { name: "Grandpa Scott", short: "Grndpa S" },
+  { name: "Robbie Del Castillo", short: "Robbie" }
 ];
 
 const categories = [
@@ -1089,6 +1121,9 @@ const categories = [
       "Jacob Elordi - Frankenstein",
       "Benicio Del Toro - One Battle After Another",
       "Sean Penn - One Battle After Another",
+      "Sean Penn - One Battle After Another",
+      "Stellan Skarsgard - Sentimental Value",
+      "Sean Penn - One Battle After Another",
       "Sean Penn - One Battle After Another"
     ]
   },
@@ -1097,7 +1132,8 @@ const categories = [
     nominees: ["Arco","Elio","KPop Demon Hunters","Little Amelie","Zootopia 2"],
     picks: [
       "Elio","KPop Demon Hunters","KPop Demon Hunters","KPop Demon Hunters","KPop Demon Hunters","KPop Demon Hunters","KPop Demon Hunters","KPop Demon Hunters","Arco",
-      "Elio","Elio","KPop Demon Hunters","KPop Demon Hunters","KPop Demon Hunters","Zootopia 2","KPop Demon Hunters","KPop Demon Hunters"
+      "Elio","Elio","KPop Demon Hunters","KPop Demon Hunters","KPop Demon Hunters","Zootopia 2","KPop Demon Hunters","KPop Demon Hunters",
+      "KPop Demon Hunters","Elio","KPop Demon Hunters"
     ]
   },
   {
@@ -1105,7 +1141,8 @@ const categories = [
     nominees: ["Avatar: Fire and Ash","Frankenstein","Hamnet","Marty Supreme","Sinners"],
     picks: [
       "Frankenstein","Frankenstein","Frankenstein","Sinners","Frankenstein","Frankenstein","Hamnet","Hamnet","Avatar: Fire and Ash",
-      "Frankenstein","Sinners","Sinners","Sinners","Sinners","Avatar: Fire and Ash","Frankenstein","Avatar: Fire and Ash"
+      "Frankenstein","Sinners","Sinners","Sinners","Sinners","Avatar: Fire and Ash","Frankenstein","Avatar: Fire and Ash",
+      "Avatar: Fire and Ash","Frankenstein","Frankenstein"
     ]
   },
   {
@@ -1113,7 +1150,8 @@ const categories = [
     nominees: ["Blue Moon","It Was Just an Accident","Marty Supreme","Sentimental Value","Sinners"],
     picks: [
       "Sinners","Sinners","Sinners","Sinners","Sinners","Sinners","Sinners","Sinners","Sinners",
-      "Sentimental Value","Sinners","Sinners","Sinners","Sinners","Sentimental Value","Sentimental Value","Sinners"
+      "Sentimental Value","Sinners","Sinners","Sinners","Sinners","Sentimental Value","Sentimental Value","Sinners",
+      "Blue Moon","Marty Supreme","Sinners"
     ]
   },
   {
@@ -1121,7 +1159,8 @@ const categories = [
     nominees: ["Bugonia","Frankenstein","Hamnet","One Battle After Another","Train Dreams"],
     picks: [
       "Hamnet","One Battle After Another","Hamnet","Hamnet","One Battle After Another","One Battle After Another","Bugonia","Bugonia","Frankenstein",
-      "Hamnet","One Battle After Another","One Battle After Another","Frankenstein","Hamnet","Frankenstein","Hamnet","One Battle After Another"
+      "Hamnet","One Battle After Another","One Battle After Another","Frankenstein","Hamnet","Frankenstein","Hamnet","One Battle After Another",
+      "Hamnet","Frankenstein","One Battle After Another"
     ]
   },
   {
@@ -1129,7 +1168,8 @@ const categories = [
     nominees: ["Frankenstein","Kokuho","Sinners","The Smashing Machine","The Ugly Stepsister"],
     picks: [
       "Sinners","Frankenstein","Frankenstein","Sinners","Frankenstein","Frankenstein","Sinners","Frankenstein","The Ugly Stepsister",
-      "Frankenstein","Sinners","Sinners","Frankenstein","Sinners","Frankenstein","Sinners","Frankenstein"
+      "Frankenstein","Sinners","Sinners","Frankenstein","Sinners","Frankenstein","Sinners","Frankenstein",
+      "Kokuho","Frankenstein","Frankenstein"
     ]
   },
   {
@@ -1137,7 +1177,8 @@ const categories = [
     nominees: ["F1","Marty Supreme","One Battle After Another","Sentimental Value","Sinners"],
     picks: [
       "Sinners","F1","One Battle After Another","Sinners","One Battle After Another","Marty Supreme","One Battle After Another","Sinners","Sentimental Value",
-      "Marty Supreme","F1","F1","F1","Sinners","Marty Supreme","Sinners","One Battle After Another"
+      "Marty Supreme","F1","F1","F1","Sinners","Marty Supreme","Sinners","One Battle After Another",
+      "F1","Sinners","One Battle After Another"
     ]
   },
   {
@@ -1160,7 +1201,10 @@ const categories = [
       "Teyana Taylor - One Battle After Another",
       "Inga Ibsdottir Lilleaas - Sentimental Value",
       "Amy Madigan - Weapons",
-      "Wunmi Mosaku - Sinners"
+      "Wunmi Mosaku - Sinners",
+      "Elle Fanning - Sentimental Value",
+      "Teyana Taylor - One Battle After Another",
+      "Teyana Taylor - One Battle After Another"
     ]
   },
   {
@@ -1168,7 +1212,8 @@ const categories = [
     nominees: ["Frankenstein","Hamnet","Marty Supreme","One Battle After Another","Sinners"],
     picks: [
       "Sinners","Frankenstein","Frankenstein","Sinners","One Battle After Another","Marty Supreme","Hamnet","Hamnet","Sinners",
-      "Frankenstein","Sinners","Sinners","Frankenstein","Frankenstein","Frankenstein","Frankenstein","Sinners"
+      "Frankenstein","Sinners","Sinners","Frankenstein","Frankenstein","Frankenstein","Frankenstein","Sinners",
+      "Hamnet","Frankenstein","Frankenstein"
     ]
   },
   {
@@ -1191,6 +1236,9 @@ const categories = [
       "\"Golden\" - KPop Demon Hunters",
       "\"Golden\" - KPop Demon Hunters",
       "\"Golden\" - KPop Demon Hunters",
+      "\"Golden\" - KPop Demon Hunters",
+      "\"Golden\" - KPop Demon Hunters",
+      "\"Golden\" - KPop Demon Hunters",
       "\"Golden\" - KPop Demon Hunters"
     ]
   },
@@ -1199,7 +1247,8 @@ const categories = [
     nominees: ["The Alabama Solution","Come See Me in the Good Light","Cutting Through Rocks","Mr. Nobody Against Putin","The Perfect Neighbor"],
     picks: [
       "Come See Me in the Good Light","The Alabama Solution","Mr. Nobody Against Putin","The Alabama Solution","Mr. Nobody Against Putin","Mr. Nobody Against Putin","Mr. Nobody Against Putin","Mr. Nobody Against Putin","Mr. Nobody Against Putin",
-      "Come See Me in the Good Light","Mr. Nobody Against Putin","Cutting Through Rocks","Mr. Nobody Against Putin","The Perfect Neighbor","The Alabama Solution","The Alabama Solution","The Perfect Neighbor"
+      "Come See Me in the Good Light","Mr. Nobody Against Putin","Cutting Through Rocks","Mr. Nobody Against Putin","The Perfect Neighbor","The Alabama Solution","The Alabama Solution","The Perfect Neighbor",
+      "Come See Me in the Good Light","Come See Me in the Good Light","The Perfect Neighbor"
     ]
   },
   {
@@ -1207,7 +1256,8 @@ const categories = [
     nominees: ["F1","Frankenstein","One Battle After Another","Sinners","Sirat"],
     picks: [
       "F1","F1","F1","F1","F1","Sinners","Sinners","Sinners","Sirat",
-      "F1","F1","One Battle After Another","Sinners","Sinners","Sinners","F1","F1"
+      "F1","F1","One Battle After Another","Sinners","Sinners","Sinners","F1","F1",
+      "F1","F1","F1"
     ]
   },
   {
@@ -1215,7 +1265,8 @@ const categories = [
     nominees: ["Avatar: Fire and Ash","F1","Jurassic World Rebirth","The Lost Bus","Sinners"],
     picks: [
       "Sinners","Avatar: Fire and Ash","Avatar: Fire and Ash","F1","Avatar: Fire and Ash","Avatar: Fire and Ash","Sinners","Sinners","Sinners",
-      "F1","F1","F1","Sinners","Avatar: Fire and Ash","Avatar: Fire and Ash","Avatar: Fire and Ash","Avatar: Fire and Ash"
+      "F1","F1","F1","Sinners","Avatar: Fire and Ash","Avatar: Fire and Ash","Avatar: Fire and Ash","Avatar: Fire and Ash",
+      "F1","F1","Avatar: Fire and Ash"
     ]
   },
   {
@@ -1223,7 +1274,8 @@ const categories = [
     nominees: ["Frankenstein","Marty Supreme","One Battle After Another","Sinners","Train Dreams"],
     picks: [
       "One Battle After Another","One Battle After Another","One Battle After Another","Train Dreams","Train Dreams","One Battle After Another","Train Dreams","Train Dreams","Marty Supreme",
-      "Frankenstein","One Battle After Another","One Battle After Another","Train Dreams","Frankenstein","One Battle After Another","Sinners","Sinners"
+      "Frankenstein","One Battle After Another","One Battle After Another","Train Dreams","Frankenstein","One Battle After Another","Sinners","Sinners",
+      "Train Dreams","Frankenstein","One Battle After Another"
     ]
   },
   {
@@ -1231,7 +1283,8 @@ const categories = [
     nominees: ["It Was Just an Accident","Sentimental Value","Sirat","The Secret Agent","The Voice of Hind Rajab"],
     picks: [
       "Sentimental Value","Sentimental Value","Sentimental Value","Sentimental Value","The Secret Agent","Sentimental Value","The Secret Agent","The Secret Agent","Sentimental Value",
-      "The Secret Agent","Sirat","Sirat","Sentimental Value","It Was Just an Accident","Sentimental Value","The Secret Agent","The Secret Agent"
+      "The Secret Agent","Sirat","Sirat","Sentimental Value","It Was Just an Accident","Sentimental Value","The Secret Agent","The Secret Agent",
+      "The Voice of Hind Rajab","Sentimental Value","It Was Just an Accident"
     ]
   },
   {
@@ -1239,7 +1292,8 @@ const categories = [
     nominees: ["Bugonia","Frankenstein","Hamnet","One Battle After Another","Sinners"],
     picks: [
       "Sinners","Sinners","Sinners","Sinners","Sinners","Bugonia","Bugonia","Bugonia","One Battle After Another",
-      "One Battle After Another","Hamnet","Sinners","Sinners","Hamnet","Hamnet","Sinners","Sinners"
+      "One Battle After Another","Hamnet","Sinners","Sinners","Hamnet","Hamnet","Sinners","Sinners",
+      "Bugonia","One Battle After Another","Sinners"
     ]
   },
   {
@@ -1262,6 +1316,9 @@ const categories = [
       "Michael B. Jordan - Sinners",
       "Michael B. Jordan - Sinners",
       "Michael B. Jordan - Sinners",
+      "Michael B. Jordan - Sinners",
+      "Michael B. Jordan - Sinners",
+      "Leonardo DiCaprio - One Battle After Another",
       "Michael B. Jordan - Sinners"
     ]
   },
@@ -1285,6 +1342,9 @@ const categories = [
       "Chloe Zhao - Hamnet",
       "Ryan Coogler - Sinners",
       "Chloe Zhao - Hamnet",
+      "Paul Thomas Anderson - One Battle After Another",
+      "Joachim Trier - Sentimental Value",
+      "Paul Thomas Anderson - One Battle After Another",
       "Paul Thomas Anderson - One Battle After Another"
     ]
   },
@@ -1308,6 +1368,9 @@ const categories = [
       "Emma Stone - Bugonia",
       "Emma Stone - Bugonia",
       "Jessie Buckley - Hamnet",
+      "Jessie Buckley - Hamnet",
+      "Kate Hudson - Song Sung Blue",
+      "Emma Stone - Bugonia",
       "Jessie Buckley - Hamnet"
     ]
   },
@@ -1316,7 +1379,8 @@ const categories = [
     nominees: ["Bugonia","F1","Frankenstein","Hamnet","Marty Supreme","One Battle After Another","The Secret Agent","Sentimental Value","Sinners","Train Dreams"],
     picks: [
       "Hamnet","One Battle After Another","Sinners","Hamnet","One Battle After Another","Sinners","Sinners","Sinners","The Secret Agent",
-      "One Battle After Another","One Battle After Another","Sinners","Sinners","Sinners","Marty Supreme","One Battle After Another","Sinners"
+      "One Battle After Another","One Battle After Another","Sinners","Sinners","Sinners","Marty Supreme","One Battle After Another","Sinners",
+      "F1","One Battle After Another","Sinners"
     ]
   }
 ];
@@ -1431,7 +1495,7 @@ function renderCategories() {
     // Scroll hint for mobile
     const hint = document.createElement('div');
     hint.className = 'scroll-hint';
-    hint.textContent = 'Swipe to see all picks \u2192';
+    hint.innerHTML = 'Swipe to see all picks <span class="sh-arrow">\u2192</span>';
     body.appendChild(hint);
 
     // Scrollable wrapper
@@ -1481,7 +1545,11 @@ function renderCategories() {
     });
 
     scroll.appendChild(table);
-    body.appendChild(scroll);
+
+    const scrollWrap = document.createElement('div');
+    scrollWrap.className = 'cat-scroll-wrap';
+    scrollWrap.appendChild(scroll);
+    body.appendChild(scrollWrap);
 
     // Toggle collapse
     header.addEventListener('click', () => {
