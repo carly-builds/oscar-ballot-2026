@@ -809,6 +809,114 @@
     display:none;
   }
 
+  /* ============ PLAYER PICKS MODAL ============ */
+  .picks-modal-overlay{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    background:rgba(0,0,0,.7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .3s, visibility .3s;
+  }
+
+  .picks-modal-overlay.visible{
+    opacity:1;
+    visibility:visible;
+  }
+
+  .picks-modal{
+    background:var(--black-card);
+    border:1px solid rgba(212,168,83,.2);
+    max-width:400px;
+    width:100%;
+    max-height:80vh;
+    overflow-y:auto;
+    padding:1.5rem;
+    position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+  }
+
+  .picks-modal .pm-close{
+    position:absolute;
+    top:.8rem;right:.8rem;
+    background:none;border:none;
+    color:var(--cream-muted);
+    font-size:1.2rem;
+    cursor:pointer;
+    line-height:1;
+    padding:.2rem;
+  }
+
+  .picks-modal .pm-name{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:1.3rem;
+    color:var(--gold);
+    margin-bottom:.3rem;
+  }
+
+  .picks-modal .pm-score{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.7rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--cream-muted);
+    margin-bottom:1.2rem;
+  }
+
+  .picks-modal .pm-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:.45rem 0;
+    border-bottom:1px solid rgba(255,255,255,.04);
+    gap:.5rem;
+  }
+
+  .picks-modal .pm-row:last-child{border:none}
+
+  .picks-modal .pm-cat{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.55rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--gold-dark);
+    flex-shrink:0;
+    width:35%;
+  }
+
+  .picks-modal .pm-pick{
+    font-family:'Cormorant Garamond',serif;
+    font-size:.9rem;
+    color:var(--cream);
+    text-align:right;
+    flex:1;
+  }
+
+  .picks-modal .pm-pick.correct{color:var(--green-light)}
+  .picks-modal .pm-pick.wrong{color:var(--wrong);opacity:.6}
+
+  /* Leaderboard hint */
+  .lb-hint{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.5rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--cream-muted);
+    opacity:.5;
+    text-align:center;
+    margin-top:.8rem;
+  }
+
+  /* Make leaderboard cards clickable */
+  .pack-card,.podium-spot{cursor:pointer}
+  .podium-spot:hover .p-name{color:var(--gold-light)}
+
   /* ============ CONAN ============ */
   .conan{
     position:fixed;
@@ -818,6 +926,14 @@
     cursor:pointer;
     transition:transform .3s ease;
     text-align:center;
+    animation:conanBounce 3s ease 3s 3;
+  }
+
+  @keyframes conanBounce{
+    0%,20%,50%,80%,100%{transform:translateY(0)}
+    10%{transform:translateY(-8px)}
+    30%{transform:translateY(-4px)}
+    60%{transform:translateY(-6px)}
   }
 
   .conan .conan-img{
@@ -830,6 +946,12 @@
     display:block;
     box-shadow:0 2px 10px rgba(0,0,0,.4);
     transition:border-color .3s, box-shadow .3s;
+    animation:conanGlow 2s ease 3s 3 alternate;
+  }
+
+  @keyframes conanGlow{
+    0%{box-shadow:0 2px 10px rgba(0,0,0,.4)}
+    100%{box-shadow:0 2px 20px rgba(212,168,83,.4), 0 0 10px rgba(212,168,83,.2)}
   }
 
   .conan:hover .conan-img{
@@ -1063,7 +1185,18 @@
   <p class="section-label">Leaderboard</p>
   <div class="podium" id="podium"></div>
   <div class="pack-grid" id="pack"></div>
+  <div class="lb-hint">Tap a name to see their picks</div>
 </section>
+
+<!-- Player Picks Modal -->
+<div class="picks-modal-overlay" id="picks-overlay">
+  <div class="picks-modal" id="picks-modal">
+    <button class="pm-close" id="pm-close">&times;</button>
+    <div class="pm-name" id="pm-name"></div>
+    <div class="pm-score" id="pm-score"></div>
+    <div id="pm-picks"></div>
+  </div>
+</div>
 
 <div class="deco-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
 
@@ -1435,6 +1568,7 @@ function renderLeaderboard() {
         <div class="p-score">${p.score} / ${totalDecided}</div>
         <div class="p-pedestal"></div>
       `;
+      spot.addEventListener('click', () => showPlayerPicks(p.idx));
       podium.appendChild(spot);
     });
 
@@ -1450,6 +1584,7 @@ function renderLeaderboard() {
         <div class="pc-score">${p.score} / ${totalDecided}</div>
         <div class="pc-bar"><div class="pc-bar-fill" style="width:${pct}%"></div></div>
       `;
+      card.addEventListener('click', () => showPlayerPicks(p.idx));
       pack.appendChild(card);
     }
   } else {
@@ -1462,6 +1597,7 @@ function renderLeaderboard() {
         <div class="pc-name">${p.short}</div>
         <div class="pc-score">0 / 0</div>
       `;
+      card.addEventListener('click', () => showPlayerPicks(p.idx));
       pack.appendChild(card);
     });
   }
@@ -1561,6 +1697,58 @@ function renderCategories() {
     container.appendChild(block);
   });
 }
+
+// ============ PLAYER PICKS MODAL ============
+function showPlayerPicks(playerIdx) {
+  const p = players[playerIdx];
+  const overlay = document.getElementById('picks-overlay');
+  const totalDecided = Object.keys(winners).length;
+
+  // Calculate this player's score
+  let score = 0;
+  categories.forEach(cat => {
+    const w = winners[cat.name];
+    if (w && cat.picks[playerIdx] === w) score++;
+  });
+
+  document.getElementById('pm-name').textContent = p.name;
+  document.getElementById('pm-score').textContent = totalDecided > 0
+    ? `${score} / ${totalDecided} correct`
+    : '20 picks';
+
+  const picksContainer = document.getElementById('pm-picks');
+  picksContainer.innerHTML = '';
+
+  categories.forEach(cat => {
+    const pick = cat.picks[playerIdx] || '—';
+    const w = winners[cat.name];
+    const row = document.createElement('div');
+    row.className = 'pm-row';
+
+    let pickClass = 'pm-pick';
+    if (w) {
+      pickClass += pick === w ? ' correct' : ' wrong';
+    }
+
+    row.innerHTML = `
+      <div class="pm-cat">${cat.name.replace('Best ', '')}</div>
+      <div class="${pickClass}">${pick}</div>
+    `;
+    picksContainer.appendChild(row);
+  });
+
+  overlay.classList.add('visible');
+}
+
+document.getElementById('pm-close').addEventListener('click', () => {
+  document.getElementById('picks-overlay').classList.remove('visible');
+});
+
+document.getElementById('picks-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('picks-overlay')) {
+    document.getElementById('picks-overlay').classList.remove('visible');
+  }
+});
 
 // ============ SPLASH ============
 document.getElementById('splash-enter').addEventListener('click', () => {
