@@ -131,7 +131,7 @@
   }
 
   .splash .s-photo{
-    width:clamp(100px, 20vw, 160px);
+    width:clamp(140px, 30vw, 200px);
     height:auto;
     display:block;
     filter:drop-shadow(0 0 30px rgba(212,168,83,.15));
@@ -163,7 +163,7 @@
   .splash .s-title{
     font-family:'Playfair Display',serif;
     font-weight:900;
-    font-size:clamp(1.5rem, 4vw, 2.8rem);
+    font-size:clamp(1.8rem, 5vw, 2.8rem);
     letter-spacing:.12em;
     text-transform:uppercase;
     color:var(--white);
@@ -787,7 +787,7 @@
     top:1rem;
     right:1rem;
     z-index:100;
-    cursor:default;
+    cursor:pointer;
     transition:transform .3s ease;
     text-align:center;
   }
@@ -801,6 +801,62 @@
     border:2px solid var(--gold);
     display:block;
     box-shadow:0 2px 10px rgba(0,0,0,.4);
+    transition:border-color .3s, box-shadow .3s;
+  }
+
+  .conan:hover .conan-img{
+    border-color:var(--gold-light);
+    box-shadow:0 2px 15px rgba(212,168,83,.3);
+  }
+
+  /* Fun fact tooltip */
+  .conan-fact{
+    position:fixed;
+    top:4.5rem;
+    right:1rem;
+    width:260px;
+    background:var(--black-card);
+    border:1px solid rgba(212,168,83,.25);
+    padding:1rem;
+    z-index:101;
+    opacity:0;
+    transform:translateY(-8px);
+    pointer-events:none;
+    transition:opacity .3s ease, transform .3s ease;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+  }
+
+  .conan-fact.visible{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+
+  .conan-fact .cf-label{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.5rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:.5rem;
+  }
+
+  .conan-fact .cf-text{
+    font-family:'Cormorant Garamond',serif;
+    font-size:.9rem;
+    line-height:1.5;
+    color:var(--cream);
+  }
+
+  .conan-fact .cf-tap{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.4rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--cream-muted);
+    opacity:.4;
+    margin-top:.6rem;
+    text-align:right;
   }
 
   .conan .conan-label{
@@ -867,18 +923,20 @@
   /* ============ RESPONSIVE ============ */
   @media(max-width:768px){
     .header{padding:2rem 1rem 1.5rem}
-    .header h1{font-size:clamp(1.6rem, 8vw, 2.5rem)}
+    .header h1{font-size:clamp(1.8rem, 8vw, 2.5rem)}
 
     .leaderboard-section{padding:1rem 1rem 2rem}
 
+    .section-label{font-size:.65rem;letter-spacing:.3em}
+
     .pack-grid{
-      grid-template-columns:repeat(auto-fill, minmax(90px, 1fr));
-      gap:.4rem;
+      grid-template-columns:repeat(auto-fill, minmax(95px, 1fr));
+      gap:.5rem;
     }
 
-    .pack-card{padding:.6rem .4rem}
-    .pack-card .pc-name{font-size:.85rem}
-    .pack-card .pc-score{font-size:.75rem}
+    .pack-card{padding:.7rem .5rem}
+    .pack-card .pc-name{font-size:.9rem}
+    .pack-card .pc-score{font-size:.8rem}
 
     .categories-section{padding:1.5rem .5rem 3rem}
 
@@ -893,10 +951,18 @@
     .deco-divider .line{width:40px}
 
     .conan{top:.5rem;right:.5rem}
-    .conan .conan-img{width:38px;height:38px}
+    .conan .conan-img{width:40px;height:40px}
     .conan .conan-label{font-size:.35rem}
 
-    .ballot-link{font-size:.55rem;padding:.35rem .6rem}
+    .conan-fact{
+      top:3.5rem;
+      right:.5rem;
+      width:220px;
+      padding:.8rem;
+    }
+    .conan-fact .cf-text{font-size:.8rem}
+
+    .ballot-link{font-size:.6rem;padding:.4rem .8rem}
   }
 
   @media(max-width:400px){
@@ -948,7 +1014,12 @@
 <!-- Conan -->
 <div class="conan" id="conan">
   <img src="conan.png" alt="Conan O'Brien" class="conan-img">
-  <span class="conan-label">Conan</span>
+  <span class="conan-label">Tap me</span>
+</div>
+<div class="conan-fact" id="conan-fact">
+  <div class="cf-label">Oscar Fun Fact</div>
+  <div class="cf-text" id="cf-text"></div>
+  <div class="cf-tap">tap Conan for another</div>
 </div>
 
 <div class="header">
@@ -1468,6 +1539,56 @@ setInterval(updateCountdown, 1000);
 // ============ INIT ============
 renderLeaderboard();
 renderCategories();
+
+// ============ CONAN FUN FACTS ============
+const oscarFacts = [
+  "Walt Disney holds the record for most Oscar wins ever with 22 competitive awards.",
+  "The Oscar statuette is officially named the Academy Award of Merit. It's 13.5 inches tall and weighs 8.5 pounds.",
+  "Katharine Hepburn won 4 Best Actress Oscars and never attended the ceremony to accept any of them.",
+  "The first Academy Awards ceremony in 1929 lasted only 15 minutes.",
+  "Three films have won all \"Big Five\" Oscars (Picture, Director, Actor, Actress, Screenplay): It Happened One Night, One Flew Over the Cuckoo's Nest, and The Silence of the Lambs.",
+  "Meryl Streep holds the record for most acting nominations with 21.",
+  "The youngest Oscar winner ever is Tatum O'Neal, who won Best Supporting Actress at age 10 for Paper Moon.",
+  "Ben-Hur, Titanic, and The Lord of the Rings: The Return of the King share the record for most wins at 11 each.",
+  "The envelope system was introduced after a newspaper leaked the winners before the 1941 ceremony.",
+  "Hattie McDaniel was the first Black person to win an Oscar, for Gone with the Wind in 1940. She had to sit at a segregated table at the ceremony.",
+  "Marlon Brando refused his Best Actor Oscar for The Godfather in 1973, sending Sacheen Littlefeather to decline it in protest.",
+  "The Oscar statuette was originally sculpted by George Stanley based on a sketch by Cedric Gibbons. It depicts a knight standing on a reel of film.",
+  "Only three films have won Best Picture without a Best Director nomination: Wings, Driving Miss Daisy, and Argo.",
+  "The longest film to win Best Picture is Gone with the Wind at 3 hours and 58 minutes.",
+  "Edith Head won 8 Oscars for Costume Design, the most wins by any woman in Academy history.",
+  "The Oscar ceremony was postponed three times: for floods in 1938, after MLK Jr.'s assassination in 1968, and after the Reagan assassination attempt in 1981.",
+  "Woody Allen has been nominated 24 times but has only attended the ceremony once, in 2002 to present a tribute to New York City after 9/11.",
+  "The phrase \"And the Oscar goes to...\" replaced \"And the winner is...\" in 1989 to avoid making the other nominees feel like losers.",
+  "John Ford holds the record for most Best Director wins with 4.",
+  "The most nominated film without a single win is The Turning Point (1977) with 11 nominations and zero wins."
+];
+
+let factIndex = Math.floor(Math.random() * oscarFacts.length);
+let factTimeout = null;
+
+document.getElementById('conan').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const factEl = document.getElementById('conan-fact');
+  const textEl = document.getElementById('cf-text');
+
+  textEl.textContent = oscarFacts[factIndex];
+  factIndex = (factIndex + 1) % oscarFacts.length;
+
+  factEl.classList.add('visible');
+
+  clearTimeout(factTimeout);
+  factTimeout = setTimeout(() => {
+    factEl.classList.remove('visible');
+  }, 6000);
+});
+
+// Close fact on tap outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.conan') && !e.target.closest('.conan-fact')) {
+    document.getElementById('conan-fact').classList.remove('visible');
+  }
+});
 
 // ============ CONAN CLAP ============
 let prevWinnerCount = 0;
