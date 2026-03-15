@@ -621,10 +621,36 @@
     max-height:0 !important;
   }
 
+  /* Scrollable table wrapper for mobile */
+  .cat-scroll{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    scrollbar-color:var(--gold-dark) transparent;
+  }
+
+  .cat-scroll::-webkit-scrollbar{
+    height:4px;
+  }
+
+  .cat-scroll::-webkit-scrollbar-track{
+    background:transparent;
+  }
+
+  .cat-scroll::-webkit-scrollbar-thumb{
+    background:var(--gold-dark);
+    border-radius:2px;
+  }
+
+  .cat-table{
+    min-width:100%;
+    width:max-content;
+  }
+
   /* Nominee row */
   .nominee-row{
     display:grid;
-    grid-template-columns:1fr repeat(var(--player-count), minmax(55px, 1fr));
+    grid-template-columns:minmax(140px, 1.5fr) repeat(var(--player-count), minmax(42px, 1fr));
     border-bottom:1px solid rgba(255,255,255,.03);
     transition:background .2s;
   }
@@ -647,26 +673,36 @@
   .nominee-row.is-winner .nom-name::before{
     content:'';
     display:inline-block;
-    width:8px;height:8px;
+    width:6px;height:6px;
     background:var(--gold);
     border-radius:50%;
-    margin-right:.5rem;
+    margin-right:.4rem;
+    flex-shrink:0;
     vertical-align:middle;
     box-shadow:0 0 6px rgba(212,168,83,.5);
   }
 
   .nom-name{
     font-family:'Cormorant Garamond',serif;
-    font-size:.95rem;
+    font-size:.85rem;
     color:var(--cream);
-    padding:.6rem .8rem;
+    padding:.5rem .6rem;
     display:flex;
     align-items:center;
+    white-space:nowrap;
+    position:sticky;
+    left:0;
+    background:var(--black-card);
+    z-index:2;
+  }
+
+  .nominee-row.is-winner .nom-name{
+    background:rgba(30,40,30,.95);
   }
 
   .nom-cell{
     text-align:center;
-    padding:.6rem .3rem;
+    padding:.5rem .2rem;
     font-family:'Archivo Narrow',sans-serif;
     font-size:.7rem;
     letter-spacing:.05em;
@@ -677,9 +713,9 @@
   }
 
   .nom-cell .pick-dot{
-    width:8px;height:8px;
+    width:7px;height:7px;
     border-radius:50%;
-    background:rgba(201,193,180,.2);
+    background:rgba(201,193,180,.15);
   }
 
   .nom-cell .pick-dot.picked{
@@ -698,7 +734,7 @@
   /* Player header row */
   .player-header{
     display:grid;
-    grid-template-columns:1fr repeat(var(--player-count), minmax(55px, 1fr));
+    grid-template-columns:minmax(140px, 1.5fr) repeat(var(--player-count), minmax(42px, 1fr));
     background:#111;
     border-bottom:1px solid rgba(212,168,83,.1);
     position:sticky;
@@ -708,24 +744,41 @@
 
   .player-header .ph-label{
     font-family:'Archivo Narrow',sans-serif;
-    font-size:.55rem;
+    font-size:.5rem;
     letter-spacing:.1em;
     text-transform:uppercase;
     color:var(--cream-muted);
-    padding:.5rem .8rem;
+    padding:.5rem .6rem;
+    position:sticky;
+    left:0;
+    background:#111;
+    z-index:3;
   }
 
   .player-header .ph-name{
     font-family:'Archivo Narrow',sans-serif;
-    font-size:.55rem;
-    letter-spacing:.05em;
+    font-size:.45rem;
+    letter-spacing:.02em;
     text-transform:uppercase;
     color:var(--gold);
     text-align:center;
-    padding:.5rem .2rem;
+    padding:.5rem .1rem;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+  }
+
+  /* Scroll hint on mobile */
+  .scroll-hint{
+    display:none;
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.5rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--cream-muted);
+    opacity:.4;
+    text-align:right;
+    padding:.3rem .8rem 0;
   }
 
   /* ============ CONAN ============ */
@@ -802,13 +855,52 @@
   }
 
   /* ============ RESPONSIVE ============ */
-  @media(max-width:700px){
-    .player-header .ph-name{
-      font-size:.45rem;
-      letter-spacing:0;
+  @media(max-width:768px){
+    .header{padding:2rem 1rem 1.5rem}
+    .header h1{font-size:clamp(1.6rem, 8vw, 2.5rem)}
+
+    .leaderboard-section{padding:1rem 1rem 2rem}
+
+    .pack-grid{
+      grid-template-columns:repeat(auto-fill, minmax(90px, 1fr));
+      gap:.4rem;
     }
-    .nom-name{font-size:.8rem;padding:.5rem .5rem}
-    .nom-cell{padding:.5rem .2rem}
+
+    .pack-card{padding:.6rem .4rem}
+    .pack-card .pc-name{font-size:.85rem}
+    .pack-card .pc-score{font-size:.75rem}
+
+    .categories-section{padding:1.5rem .5rem 3rem}
+
+    .category-block{margin-bottom:1.5rem}
+
+    .cat-header{padding:.8rem .8rem}
+    .cat-title{font-size:.6rem;letter-spacing:.2em}
+    .cat-winner-badge{font-size:.45rem;padding:.15rem .4rem}
+
+    .scroll-hint{display:block}
+
+    .deco-divider .line{width:40px}
+
+    .conan{top:.5rem;right:.5rem;font-size:1.5rem}
+    .conan .conan-label{font-size:.35rem}
+
+    .ballot-link{font-size:.55rem;padding:.35rem .6rem}
+  }
+
+  @media(max-width:400px){
+    .pack-grid{
+      grid-template-columns:repeat(3, 1fr);
+    }
+
+    .podium{gap:.3rem;padding:0 .5rem}
+    .podium-spot .p-name{font-size:.85rem}
+    .podium-spot .p-score{font-size:.7rem}
+    .podium-spot.gold-place .p-pedestal{height:55px}
+    .podium-spot.silver-place .p-pedestal{height:40px}
+    .podium-spot.bronze-place .p-pedestal{height:28px}
+
+    .nom-name{font-size:.75rem;padding:.4rem .5rem;min-width:120px}
     .nom-cell .pick-dot{width:6px;height:6px}
   }
 </style>
@@ -851,7 +943,7 @@
 <div class="header">
   <h1>Live <span class="gold">Results</span></h1>
   <p class="header-sub">98th Academy Awards / Track the winners as they're announced</p>
-  <a href="ballot.html" class="ballot-link">Submit a Last-Minute Ballot &rarr;</a>
+  <a href="ballot.html" class="ballot-link">Back to Ballot &rarr;</a>
 </div>
 
 <div class="deco-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
@@ -1254,13 +1346,26 @@ function renderCategories() {
     const body = document.createElement('div');
     body.className = 'cat-body';
 
+    // Scroll hint for mobile
+    const hint = document.createElement('div');
+    hint.className = 'scroll-hint';
+    hint.textContent = 'Swipe to see all picks \u2192';
+    body.appendChild(hint);
+
+    // Scrollable wrapper
+    const scroll = document.createElement('div');
+    scroll.className = 'cat-scroll';
+
+    const table = document.createElement('div');
+    table.className = 'cat-table';
+
     // Player header row
     const ph = document.createElement('div');
     ph.className = 'player-header';
     ph.style.setProperty('--player-count', playerCount);
     ph.innerHTML = `<div class="ph-label">Nominee</div>` +
       players.map(p => `<div class="ph-name">${p.short}</div>`).join('');
-    body.appendChild(ph);
+    table.appendChild(ph);
 
     // Nominee rows
     cat.nominees.forEach(nom => {
@@ -1290,8 +1395,11 @@ function renderCategories() {
         row.appendChild(cell);
       });
 
-      body.appendChild(row);
+      table.appendChild(row);
     });
+
+    scroll.appendChild(table);
+    body.appendChild(scroll);
 
     // Toggle collapse
     header.addEventListener('click', () => {
