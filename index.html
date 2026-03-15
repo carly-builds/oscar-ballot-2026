@@ -828,7 +828,7 @@ const categories = [
 ];
 
 // ============ STATE ============
-const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019cf321-4aac-7cfe-97bb-17a60c175d94';
+const API_URL = '/api/winners';
 
 let winners = {};
 
@@ -992,7 +992,7 @@ renderCategories();
 // Fetch winners from cloud every 5 seconds
 async function pollWinners() {
   try {
-    const res = await fetch(BLOB_URL);
+    const res = await fetch(API_URL);
     const data = await res.json();
     const fresh = data.winners || {};
     if (JSON.stringify(fresh) !== JSON.stringify(winners)) {

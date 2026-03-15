@@ -831,7 +831,7 @@ const categories = [
 ];
 
 // ============ STATE ============
-const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019cf321-4aac-7cfe-97bb-17a60c175d94';
+const API_URL = 'https://oscar-ballot-2026.vercel.app/api/winners';
 const STORAGE_KEY = 'oscar2026_winners';
 
 function loadWinners() {
@@ -845,17 +845,18 @@ function saveWinners(w) {
   // Save locally
   localStorage.setItem(STORAGE_KEY, JSON.stringify(w));
   // Sync to cloud so public page picks it up
-  fetch(BLOB_URL, {
-    method: 'PUT',
+  fetch(API_URL, {
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ winners: w })
-  }).catch(() => {});
+  }).then(r => console.log('Saved to cloud:', r.status))
+    .catch(e => console.error('Cloud save failed:', e));
 }
 
 // Load from cloud on startup to stay in sync
 async function initWinners() {
   try {
-    const res = await fetch(BLOB_URL);
+    const res = await fetch(API_URL);
     const data = await res.json();
     if (data.winners && Object.keys(data.winners).length > 0) {
       winners = data.winners;
