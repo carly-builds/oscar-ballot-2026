@@ -502,6 +502,155 @@
     text-overflow:ellipsis;
   }
 
+  /* ============ PRODUCTION LOGO ============ */
+  .prod-logo{
+    text-align:center;
+    padding:3rem 1.5rem 1rem;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .prod-logo .spotlight{
+    position:absolute;
+    width:300px;height:300px;
+    top:-100px;left:50%;
+    transform:translateX(-50%);
+    background:radial-gradient(ellipse at center, rgba(212,168,83,.15) 0%, transparent 70%);
+    opacity:0;
+    animation:spotlightOn 2s ease .3s forwards;
+  }
+
+  @keyframes spotlightOn{
+    0%{opacity:0;transform:translateX(-50%) scale(.3)}
+    100%{opacity:1;transform:translateX(-50%) scale(1)}
+  }
+
+  .prod-logo .logo-stars{
+    display:flex;
+    justify-content:center;
+    gap:.4rem;
+    margin-bottom:.8rem;
+    opacity:0;
+    animation:fadeUp .6s ease .5s forwards;
+  }
+
+  .prod-logo .logo-star{
+    width:6px;height:6px;
+    background:var(--gold);
+    transform:rotate(45deg);
+  }
+
+  .prod-logo .logo-line{
+    width:80px;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity:0;
+    animation:fadeUp .6s ease .7s forwards;
+  }
+
+  .prod-logo .logo-icon{
+    font-size:2rem;
+    margin-bottom:.5rem;
+    opacity:0;
+    animation:logoReveal 1s ease .2s forwards;
+    filter:grayscale(.3);
+  }
+
+  @keyframes logoReveal{
+    0%{opacity:0;transform:scale(.5) rotate(-10deg)}
+    60%{opacity:1;transform:scale(1.1) rotate(2deg)}
+    100%{opacity:1;transform:scale(1) rotate(0deg)}
+  }
+
+  .prod-logo .logo-text{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:clamp(1rem, 2.5vw, 1.5rem);
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--gold);
+    opacity:0;
+    animation:logoTextIn 1.2s ease .6s forwards;
+    position:relative;
+  }
+
+  @keyframes logoTextIn{
+    0%{opacity:0;letter-spacing:1em}
+    100%{opacity:1;letter-spacing:.15em}
+  }
+
+  .prod-logo .logo-sub{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.6rem;
+    letter-spacing:.4em;
+    text-transform:uppercase;
+    color:var(--cream-muted);
+    opacity:0;
+    animation:fadeUp .6s ease 1.2s forwards;
+    margin-top:.3rem;
+  }
+
+  /* ============ CONAN ============ */
+  .conan{
+    position:fixed;
+    top:1rem;
+    right:1rem;
+    z-index:100;
+    font-size:2rem;
+    cursor:default;
+    transition:transform .3s ease;
+    line-height:1;
+  }
+
+  .conan .conan-label{
+    display:block;
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.4rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--gold);
+    text-align:center;
+    margin-top:.1rem;
+  }
+
+  .conan.clapping{
+    animation:conanClap .4s ease 5;
+  }
+
+  @keyframes conanClap{
+    0%,100%{transform:rotate(0deg) scale(1)}
+    25%{transform:rotate(-8deg) scale(1.2)}
+    75%{transform:rotate(8deg) scale(1.2)}
+  }
+
+  .conan .confetti{
+    position:absolute;
+    width:4px;height:4px;
+    border-radius:50%;
+    pointer-events:none;
+    opacity:0;
+  }
+
+  /* ============ BALLOT LINK ============ */
+  .ballot-link{
+    display:inline-block;
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.6rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--gold);
+    text-decoration:none;
+    padding:.4rem .8rem;
+    border:1px solid rgba(212,168,83,.2);
+    transition:all .3s;
+    margin-top:.8rem;
+  }
+
+  .ballot-link:hover{
+    background:rgba(212,168,83,.08);
+    border-color:var(--gold);
+  }
+
   /* ============ FOOTER ============ */
   footer{
     text-align:center;
@@ -528,10 +677,29 @@
 </head>
 <body>
 
+<!-- Conan -->
+<div class="conan" id="conan">
+  <span class="conan-emoji">👨‍🦰</span>
+  <span class="conan-label">Conan</span>
+</div>
+
+<!-- Production Logo -->
+<div class="prod-logo">
+  <div class="spotlight"></div>
+  <div class="logo-icon">🎬</div>
+  <div class="logo-stars">
+    <div class="logo-star"></div>
+    <div class="logo-line"></div>
+    <div class="logo-star"></div>
+  </div>
+  <div class="logo-text">Valancy Muralles</div>
+  <div class="logo-sub">Production</div>
+</div>
+
 <div class="header">
-  <p class="header-top">A Valancy / Muralles Production</p>
   <h1>Live <span class="gold">Results</span></h1>
   <p class="header-sub">98th Academy Awards / Track the winners as they're announced</p>
+  <a href="ballot.html" class="ballot-link">Submit a Last-Minute Ballot &rarr;</a>
 </div>
 
 <div class="deco-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
@@ -549,7 +717,7 @@
   <div id="categories"></div>
 </section>
 
-<footer>A Valancy / Muralles Production / Oscars 2026</footer>
+<footer>A Valancy Muralles Production / Oscars 2026</footer>
 
 <script>
 // ============ DATA ============
@@ -988,6 +1156,43 @@ function renderCategories() {
 renderLeaderboard();
 renderCategories();
 
+// ============ CONAN CLAP ============
+let prevWinnerCount = 0;
+
+function conanClap() {
+  const conan = document.getElementById('conan');
+  conan.classList.remove('clapping');
+  // Remove old confetti
+  conan.querySelectorAll('.confetti').forEach(c => c.remove());
+  // Trigger reflow
+  void conan.offsetWidth;
+  conan.classList.add('clapping');
+
+  // Spawn confetti
+  const colors = ['#d4a853', '#e8c97a', '#fff', '#f5f0e8', '#b08930'];
+  for (let i = 0; i < 12; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.background = colors[i % colors.length];
+    c.style.left = '50%';
+    c.style.top = '50%';
+    const angle = (i / 12) * Math.PI * 2;
+    const dist = 30 + Math.random() * 30;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    c.style.transition = `all ${0.6 + Math.random() * 0.4}s ease-out`;
+    conan.appendChild(c);
+    requestAnimationFrame(() => {
+      c.style.opacity = '1';
+      c.style.transform = `translate(${dx}px, ${dy}px)`;
+      setTimeout(() => { c.style.opacity = '0'; }, 600);
+      setTimeout(() => c.remove(), 1200);
+    });
+  }
+
+  setTimeout(() => conan.classList.remove('clapping'), 2000);
+}
+
 // ============ AUTO-POLL ============
 // Fetch winners from cloud every 5 seconds
 async function pollWinners() {
@@ -996,13 +1201,20 @@ async function pollWinners() {
     const data = await res.json();
     const fresh = data.winners || {};
     if (JSON.stringify(fresh) !== JSON.stringify(winners)) {
+      const newCount = Object.keys(fresh).length;
+      const oldCount = Object.keys(winners).length;
       winners = fresh;
       renderLeaderboard();
       renderCategories();
+      // Conan claps when a new winner is added
+      if (newCount > oldCount) {
+        conanClap();
+      }
     }
   } catch {}
 }
 
+prevWinnerCount = Object.keys(winners).length;
 pollWinners();
 setInterval(pollWinners, 5000);
 </script>
