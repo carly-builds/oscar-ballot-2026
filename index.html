@@ -131,13 +131,13 @@
   }
 
   .splash .s-photo{
-    width:clamp(140px, 28vw, 220px);
+    width:clamp(120px, 22vw, 180px);
     height:auto;
     display:block;
-    filter:drop-shadow(0 0 40px rgba(212,168,83,.2));
+    filter:drop-shadow(0 0 30px rgba(212,168,83,.15));
     transition:transform .4s ease, filter .4s ease;
-    -webkit-mask-image:linear-gradient(to bottom, black 60%, transparent 100%);
-    mask-image:linear-gradient(to bottom, black 60%, transparent 100%);
+    -webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 45%, black 40%, transparent 100%);
+    mask-image:radial-gradient(ellipse 70% 65% at 50% 45%, black 40%, transparent 100%);
   }
 
   .splash .s-photo-wrap:hover .s-photo{
