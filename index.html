@@ -50,6 +50,167 @@
     background-size:256px;
   }
 
+  /* ============ SPLASH SCREEN ============ */
+  .splash{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    background:var(--black);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    transition:opacity .8s ease, visibility .8s ease;
+    overflow:hidden;
+  }
+
+  .splash.dismissed{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  }
+
+  .splash::before{
+    content:'';
+    position:absolute;
+    width:200vw;height:200vh;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    background:
+      radial-gradient(ellipse 30% 35% at 50% 40%, rgba(212,168,83,.1) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 50% 80%, rgba(10,10,10,.8) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .splash .s-stars{
+    display:flex;
+    gap:.5rem;
+    margin-bottom:1.5rem;
+    opacity:0;
+    animation:fadeUp .8s ease .3s forwards;
+  }
+
+  .splash .s-star{
+    width:5px;height:5px;
+    background:var(--gold);
+    transform:rotate(45deg);
+  }
+
+  .splash .s-line{
+    width:60px;height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .splash .s-top-text{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.6rem;
+    letter-spacing:.5em;
+    text-transform:uppercase;
+    color:var(--gold);
+    opacity:0;
+    animation:fadeUp .6s ease .5s forwards;
+    margin-bottom:1.5rem;
+    position:relative;
+    z-index:2;
+  }
+
+  .splash .s-photo-wrap{
+    position:relative;
+    cursor:pointer;
+    margin-bottom:1.5rem;
+    opacity:0;
+    animation:photoReveal 1.2s ease .8s forwards;
+    z-index:2;
+  }
+
+  @keyframes photoReveal{
+    0%{opacity:0;transform:scale(.7)}
+    60%{opacity:1;transform:scale(1.03)}
+    100%{opacity:1;transform:scale(1)}
+  }
+
+  .splash .s-photo{
+    width:clamp(180px, 35vw, 280px);
+    height:auto;
+    display:block;
+    filter:drop-shadow(0 0 40px rgba(212,168,83,.2)) drop-shadow(0 20px 40px rgba(0,0,0,.5));
+    transition:transform .4s ease, filter .4s ease;
+  }
+
+  .splash .s-photo-wrap:hover .s-photo{
+    transform:scale(1.05);
+    filter:drop-shadow(0 0 60px rgba(212,168,83,.35)) drop-shadow(0 20px 40px rgba(0,0,0,.5));
+  }
+
+  .splash .s-photo-ring{
+    position:absolute;
+    inset:-15px;
+    border:1px solid rgba(212,168,83,.15);
+    border-radius:50%;
+    opacity:0;
+    animation:ringPulse 2s ease 1.5s infinite;
+  }
+
+  @keyframes ringPulse{
+    0%{transform:scale(.95);opacity:.3}
+    50%{transform:scale(1.05);opacity:0}
+    100%{transform:scale(.95);opacity:0}
+  }
+
+  .splash .s-title{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:clamp(1.5rem, 4vw, 2.8rem);
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--white);
+    text-align:center;
+    opacity:0;
+    animation:titleSpread 1.5s ease .6s forwards;
+    position:relative;
+    z-index:2;
+    line-height:1.1;
+  }
+
+  @keyframes titleSpread{
+    0%{opacity:0;letter-spacing:.8em;color:var(--gold)}
+    50%{opacity:1}
+    100%{opacity:1;letter-spacing:.12em;color:var(--white)}
+  }
+
+  .splash .s-title .s-gold{color:var(--gold)}
+
+  .splash .s-production{
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:600;
+    font-size:clamp(.7rem, 1.5vw, .9rem);
+    letter-spacing:.6em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-top:.4rem;
+    opacity:0;
+    animation:fadeUp .6s ease 1.4s forwards;
+    position:relative;
+    z-index:2;
+  }
+
+  .splash .s-enter{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:clamp(.8rem, 1.5vw, 1rem);
+    color:var(--cream-muted);
+    margin-top:2rem;
+    opacity:0;
+    animation:fadeUp .6s ease 2s forwards, enterPulse 2s ease 2.6s infinite;
+    position:relative;
+    z-index:2;
+  }
+
+  @keyframes enterPulse{
+    0%,100%{opacity:.5}
+    50%{opacity:1}
+  }
+
   /* ============ HEADER ============ */
   .header{
     text-align:center;
@@ -502,94 +663,6 @@
     text-overflow:ellipsis;
   }
 
-  /* ============ PRODUCTION LOGO ============ */
-  .prod-logo{
-    text-align:center;
-    padding:3rem 1.5rem 1rem;
-    position:relative;
-    overflow:hidden;
-  }
-
-  .prod-logo .spotlight{
-    position:absolute;
-    width:300px;height:300px;
-    top:-100px;left:50%;
-    transform:translateX(-50%);
-    background:radial-gradient(ellipse at center, rgba(212,168,83,.15) 0%, transparent 70%);
-    opacity:0;
-    animation:spotlightOn 2s ease .3s forwards;
-  }
-
-  @keyframes spotlightOn{
-    0%{opacity:0;transform:translateX(-50%) scale(.3)}
-    100%{opacity:1;transform:translateX(-50%) scale(1)}
-  }
-
-  .prod-logo .logo-stars{
-    display:flex;
-    justify-content:center;
-    gap:.4rem;
-    margin-bottom:.8rem;
-    opacity:0;
-    animation:fadeUp .6s ease .5s forwards;
-  }
-
-  .prod-logo .logo-star{
-    width:6px;height:6px;
-    background:var(--gold);
-    transform:rotate(45deg);
-  }
-
-  .prod-logo .logo-line{
-    width:80px;
-    height:1px;
-    background:linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity:0;
-    animation:fadeUp .6s ease .7s forwards;
-  }
-
-  .prod-logo .logo-icon{
-    font-size:2rem;
-    margin-bottom:.5rem;
-    opacity:0;
-    animation:logoReveal 1s ease .2s forwards;
-    filter:grayscale(.3);
-  }
-
-  @keyframes logoReveal{
-    0%{opacity:0;transform:scale(.5) rotate(-10deg)}
-    60%{opacity:1;transform:scale(1.1) rotate(2deg)}
-    100%{opacity:1;transform:scale(1) rotate(0deg)}
-  }
-
-  .prod-logo .logo-text{
-    font-family:'Playfair Display',serif;
-    font-weight:900;
-    font-size:clamp(1rem, 2.5vw, 1.5rem);
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--gold);
-    opacity:0;
-    animation:logoTextIn 1.2s ease .6s forwards;
-    position:relative;
-  }
-
-  @keyframes logoTextIn{
-    0%{opacity:0;letter-spacing:1em}
-    100%{opacity:1;letter-spacing:.15em}
-  }
-
-  .prod-logo .logo-sub{
-    font-family:'Archivo Narrow',sans-serif;
-    font-size:.6rem;
-    letter-spacing:.4em;
-    text-transform:uppercase;
-    color:var(--cream-muted);
-    opacity:0;
-    animation:fadeUp .6s ease 1.2s forwards;
-    margin-top:.3rem;
-  }
-
   /* ============ CONAN ============ */
   .conan{
     position:fixed;
@@ -677,23 +750,29 @@
 </head>
 <body>
 
+<!-- SPLASH SCREEN -->
+<div class="splash" id="splash">
+  <div class="s-stars">
+    <div class="s-star"></div>
+    <div class="s-line"></div>
+    <div class="s-star"></div>
+    <div class="s-line"></div>
+    <div class="s-star"></div>
+  </div>
+  <div class="s-top-text">Presents</div>
+  <div class="s-photo-wrap" id="splash-enter">
+    <div class="s-photo-ring"></div>
+    <img src="jonah.png" alt="Jonah" class="s-photo">
+  </div>
+  <div class="s-title">Valancy <span class="s-gold">Muralles</span></div>
+  <div class="s-production">Production</div>
+  <div class="s-enter">tap to enter</div>
+</div>
+
 <!-- Conan -->
 <div class="conan" id="conan">
   <span class="conan-emoji">👨‍🦰</span>
   <span class="conan-label">Conan</span>
-</div>
-
-<!-- Production Logo -->
-<div class="prod-logo">
-  <div class="spotlight"></div>
-  <div class="logo-icon">🎬</div>
-  <div class="logo-stars">
-    <div class="logo-star"></div>
-    <div class="logo-line"></div>
-    <div class="logo-star"></div>
-  </div>
-  <div class="logo-text">Valancy Muralles</div>
-  <div class="logo-sub">Production</div>
 </div>
 
 <div class="header">
@@ -1151,6 +1230,18 @@ function renderCategories() {
     container.appendChild(block);
   });
 }
+
+// ============ SPLASH ============
+document.getElementById('splash-enter').addEventListener('click', () => {
+  document.getElementById('splash').classList.add('dismissed');
+});
+
+// Also allow clicking anywhere on splash after a delay
+setTimeout(() => {
+  document.getElementById('splash').addEventListener('click', () => {
+    document.getElementById('splash').classList.add('dismissed');
+  });
+}, 2500);
 
 // ============ INIT ============
 renderLeaderboard();
