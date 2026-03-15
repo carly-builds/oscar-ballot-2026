@@ -924,9 +924,11 @@
     right:1rem;
     z-index:100;
     cursor:pointer;
-    transition:transform .3s ease;
     text-align:center;
-    animation:conanBounce 3s ease 3s 3;
+  }
+
+  .conan.bounce{
+    animation:conanBounce 3s ease 3;
   }
 
   @keyframes conanBounce{
@@ -946,7 +948,10 @@
     display:block;
     box-shadow:0 2px 10px rgba(0,0,0,.4);
     transition:border-color .3s, box-shadow .3s;
-    animation:conanGlow 2s ease 3s 3 alternate;
+  }
+
+  .conan.bounce .conan-img{
+    animation:conanGlow 2s ease 3 alternate;
   }
 
   @keyframes conanGlow{
@@ -1751,14 +1756,18 @@ document.getElementById('picks-overlay').addEventListener('click', (e) => {
 });
 
 // ============ SPLASH ============
-document.getElementById('splash-enter').addEventListener('click', () => {
+function dismissSplash() {
   document.getElementById('splash').classList.add('dismissed');
-});
+  // Start Conan animation after splash fades out
+  setTimeout(() => {
+    document.getElementById('conan').classList.add('bounce');
+  }, 1000);
+}
+
+document.getElementById('splash-enter').addEventListener('click', dismissSplash);
 
 setTimeout(() => {
-  document.getElementById('splash').addEventListener('click', () => {
-    document.getElementById('splash').classList.add('dismissed');
-  });
+  document.getElementById('splash').addEventListener('click', dismissSplash);
 }, 2500);
 
 // ============ COUNTDOWN ============
