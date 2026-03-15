@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oscar Ballot 2026 / Pick Your Winners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Archivo+Narrow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --gold:#d4a853;
+    --gold-light:#e8c97a;
+    --gold-dark:#b08930;
+    --black:#0a0a0a;
+    --black-soft:#151515;
+    --black-card:#1a1a1a;
+    --cream:#f5f0e8;
+    --cream-muted:#c9c1b4;
+    --white:#ffffff;
+    --red-carpet:#8b2020;
+    --marquee-red:#6e1a1a;
+    --marquee-red-bright:#a82525;
+    --bulb:#ffe4a8;
+  }
+
+  html{scroll-behavior:smooth}
+
+  body{
+    background:var(--black);
+    color:var(--cream);
+    font-family:'Cormorant Garamond',Georgia,serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ============ NOISE OVERLAY ============ */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    pointer-events:none;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat:repeat;
+    background-size:256px;
+  }
+
+  /* ============ HERO / THEATER ============ */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:3rem 1.5rem 4rem;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Warm ambient glow from marquee */
+  .hero::before{
+    content:'';
+    position:absolute;
+    width:150vw;height:150vh;
+    top:-20%;left:50%;
+    transform:translateX(-50%);
+    background:
+      radial-gradient(ellipse 35% 25% at 50% 15%, rgba(212,168,83,.18) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 50% 60%, rgba(110,26,26,.06) 0%, transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ============ MARQUEE ============ */
+  .marquee{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:750px;
+    margin-bottom:2.5rem;
+    opacity:0;
+    animation:fadeUp .8s ease forwards;
+  }
+
+  .marquee-outer{
+    position:relative;
+    background:var(--marquee-red);
+    border:3px solid var(--gold);
+    padding:3px;
+  }
+
+  /* Chaser lights around the marquee */
+  .marquee-lights{
+    position:absolute;
+    inset:-8px;
+    pointer-events:none;
+    z-index:3;
+  }
+
+  .marquee-lights .bulb{
+    position:absolute;
+    width:6px;height:6px;
+    border-radius:50%;
+    background:var(--bulb);
+    box-shadow:0 0 6px 2px rgba(255,228,168,.6);
+    animation:bulbChase 1.2s ease-in-out infinite alternate;
+  }
+
+  .marquee-lights .bulb:nth-child(odd){animation-delay:0s}
+  .marquee-lights .bulb:nth-child(even){animation-delay:.6s}
+
+  @keyframes bulbChase{
+    0%{opacity:.3;box-shadow:0 0 3px 1px rgba(255,228,168,.2)}
+    100%{opacity:1;box-shadow:0 0 8px 3px rgba(255,228,168,.8)}
+  }
+
+  .marquee-inner{
+    background:linear-gradient(180deg, var(--marquee-red-bright) 0%, var(--marquee-red) 100%);
+    border:2px solid var(--gold-dark);
+    text-align:center;
+    padding:2rem 2rem 1.5rem;
+  }
+
+  .marquee-top{
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:600;
+    font-size:.7rem;
+    letter-spacing:.5em;
+    text-transform:uppercase;
+    color:var(--gold-light);
+    margin-bottom:.5rem;
+  }
+
+  .marquee-title{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:clamp(2.5rem, 7vw, 5.5rem);
+    line-height:.9;
+    color:var(--white);
+    text-shadow:0 2px 20px rgba(0,0,0,.5);
+    margin-bottom:.3rem;
+  }
+
+  .marquee-title .gold{color:var(--gold)}
+
+  .marquee-subtitle{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:clamp(.95rem, 2vw, 1.3rem);
+    color:var(--cream);
+    margin-bottom:1rem;
+  }
+
+  .marquee-info{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.65rem;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:flex;
+    justify-content:center;
+    gap:1.5rem;
+    flex-wrap:wrap;
+  }
+
+  /* ============ NOW SHOWING SIGNS ============ */
+  .now-showing{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:1000px;
+    margin-bottom:3rem;
+    opacity:0;
+    animation:fadeUp .8s ease .2s forwards;
+  }
+
+  .now-showing-label{
+    text-align:center;
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:700;
+    font-size:.7rem;
+    letter-spacing:.5em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1.5rem;
+  }
+
+  .click-hint{
+    display:block;
+    margin-top:.5rem;
+    font-weight:400;
+    font-size:.6rem;
+    letter-spacing:.2em;
+    color:var(--cream-muted);
+    opacity:.6;
+  }
+
+  .theater-signs{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:.75rem;
+  }
+
+  @media(max-width:800px){
+    .theater-signs{grid-template-columns:repeat(3, 1fr)}
+  }
+  @media(max-width:500px){
+    .theater-signs{grid-template-columns:repeat(2, 1fr)}
+  }
+
+  .sign{
+    perspective:800px;
+    position:relative;
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .sign-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-style:preserve-3d;
+    display:flex;
+    flex-direction:column;
+    background:var(--black-card);
+    border:1px solid rgba(212,168,83,.15);
+    transition:transform .6s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .sign:hover .sign-inner{
+    border-color:var(--gold);
+    box-shadow:0 12px 35px rgba(0,0,0,.5), 0 4px 15px rgba(212,168,83,.15);
+  }
+
+  .sign.flipped .sign-inner{
+    transform:rotateY(180deg);
+  }
+
+  .sign-front,
+  .sign-back{
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+
+  .sign-front{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .sign-back{
+    position:absolute;
+    inset:0;
+    transform:rotateY(180deg);
+    background:linear-gradient(180deg, #1a1406 0%, var(--black-card) 40%);
+    border:1px solid rgba(212,168,83,.25);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:1.2rem .8rem;
+    text-align:center;
+    gap:.8rem;
+  }
+
+  .sign-back .fun-fact-label{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.5rem;
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+
+  .sign-back .fun-fact{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(.7rem, 1vw, .85rem);
+    line-height:1.5;
+    color:var(--cream);
+  }
+
+  .sign-back .tap-hint{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.45rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--cream-muted);
+    opacity:.5;
+    margin-top:auto;
+  }
+
+  .sign-poster{
+    width:100%;
+    aspect-ratio:2/3;
+    overflow:hidden;
+    position:relative;
+  }
+
+  .sign-poster img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform .4s ease;
+  }
+
+  .sign:hover .sign-poster img{
+    transform:scale(1.05);
+  }
+
+  .sign-info{
+    padding:.6rem .5rem .7rem;
+    text-align:center;
+    background:linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+    flex-grow:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:.2rem;
+  }
+
+  .sign-title{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:clamp(.65rem, 1.1vw, .85rem);
+    color:var(--white);
+    line-height:1.2;
+  }
+
+  .sign-noms{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.5rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--gold-dark);
+  }
+
+  .sign-noms strong{color:var(--gold)}
+
+  /* Spotlight signs for the two frontrunners */
+  .sign.frontrunner-sign .sign-inner{
+    border-color:var(--gold);
+    box-shadow:0 0 20px rgba(212,168,83,.1);
+  }
+
+  .sign.frontrunner-sign .sign-info{
+    background:linear-gradient(180deg, #221a0e 0%, #151005 100%);
+  }
+
+  .sign.frontrunner-sign .sign-front::after{
+    content:'FRONTRUNNER';
+    position:absolute;
+    top:.5rem;left:50%;
+    transform:translateX(-50%);
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.5rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    text-align:center;
+    background:var(--gold);
+    color:var(--black);
+    padding:.2rem .6rem;
+    font-weight:700;
+    z-index:2;
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
+  }
+
+  .sign.frontrunner-sign .sign-title{
+    color:var(--gold-light);
+  }
+
+  /* ============ CTA AREA ============ */
+  .hero-cta{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    opacity:0;
+    animation:fadeUp .8s ease .4s forwards;
+  }
+
+  .cta-btn{
+    display:inline-block;
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    text-decoration:none;
+    color:var(--black);
+    background:linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    padding:1.1rem 3.5rem;
+    border:none;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+
+  .cta-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 30px rgba(212,168,83,.3);
+  }
+
+  .cta-btn::after{
+    content:'';
+    position:absolute;
+    top:0;left:-100%;
+    width:100%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+    transition:left .5s ease;
+  }
+
+  .cta-btn:hover::after{left:100%}
+
+  .buy-in{
+    display:block;
+    margin-top:1.2rem;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1rem;
+    font-style:italic;
+    color:var(--cream-muted);
+  }
+
+  .buy-in strong{color:var(--gold);font-style:normal}
+
+  /* ============ DIVIDER ============ */
+  .deco-divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1rem;
+    padding:1rem 0;
+  }
+
+  .deco-divider .line{
+    width:60px;
+    height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+
+  .deco-divider .diamond{
+    width:8px;height:8px;
+    background:var(--gold);
+    transform:rotate(45deg);
+    flex-shrink:0;
+  }
+
+  /* ============ HOW IT WORKS ============ */
+  .how-section{
+    padding:5rem 2rem;
+    max-width:900px;
+    margin:0 auto;
+    text-align:center;
+  }
+
+  .section-label{
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:600;
+    font-size:.75rem;
+    letter-spacing:.4em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1rem;
+  }
+
+  .section-title{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:clamp(1.8rem,4vw,2.8rem);
+    color:var(--white);
+    margin-bottom:3rem;
+  }
+
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2rem;
+  }
+
+  @media(max-width:650px){.steps{grid-template-columns:1fr}}
+
+  .step{
+    background:var(--black-card);
+    border:1px solid rgba(212,168,83,.1);
+    padding:2.5rem 1.5rem;
+    position:relative;
+  }
+
+  .step-num{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:3rem;
+    color:rgba(212,168,83,.15);
+    position:absolute;
+    top:.5rem;left:1rem;
+    line-height:1;
+  }
+
+  .step h3{
+    font-family:'Playfair Display',serif;
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--gold-light);
+    margin-bottom:.75rem;
+    margin-top:1.5rem;
+  }
+
+  .step p{
+    font-size:1.05rem;
+    line-height:1.6;
+    color:var(--cream-muted);
+  }
+
+  /* ============ CATEGORIES SECTION ============ */
+  .categories-section{
+    padding:5rem 2rem;
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  .categories-section .section-label,
+  .categories-section .section-title{text-align:center}
+
+  .categories-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    gap:1.5rem;
+    margin-top:3rem;
+  }
+
+  .category-card{
+    background:var(--black-card);
+    border:1px solid rgba(212,168,83,.08);
+    padding:1.8rem;
+    transition:border-color .3s ease, transform .3s ease;
+  }
+
+  .category-card:hover{
+    border-color:rgba(212,168,83,.25);
+    transform:translateY(-2px);
+  }
+
+  .category-card h3{
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:700;
+    font-size:.75rem;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1rem;
+    padding-bottom:.75rem;
+    border-bottom:1px solid rgba(212,168,83,.12);
+  }
+
+  .category-card ul{
+    list-style:none;
+    padding:0;
+  }
+
+  .category-card li{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.05rem;
+    color:var(--cream-muted);
+    padding:.35rem 0;
+    border-bottom:1px solid rgba(255,255,255,.03);
+    display:flex;
+    align-items:baseline;
+    gap:.5rem;
+  }
+
+  .category-card li:last-child{border:none}
+
+  .category-card li .film{
+    font-style:italic;
+    font-size:.9rem;
+    color:rgba(201,193,180,.5);
+  }
+
+  .nominee-dot{
+    width:4px;height:4px;
+    background:var(--gold);
+    border-radius:50%;
+    flex-shrink:0;
+    margin-top:.55rem;
+  }
+
+  .frontrunner::after{
+    content:'FRONTRUNNER';
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.55rem;
+    letter-spacing:.15em;
+    background:rgba(212,168,83,.15);
+    color:var(--gold);
+    padding:.15rem .5rem;
+    margin-left:.5rem;
+    vertical-align:middle;
+  }
+
+  /* ============ BOTTOM CTA ============ */
+  .bottom-cta{
+    padding:6rem 2rem;
+    text-align:center;
+    position:relative;
+  }
+
+  .bottom-cta::before{
+    content:'';
+    position:absolute;
+    width:100%;height:100%;
+    top:0;left:0;
+    background:radial-gradient(ellipse 50% 60% at 50% 50%, rgba(212,168,83,.06) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .bottom-cta .section-title{margin-bottom:.5rem}
+
+  .bottom-cta p{
+    font-size:1.15rem;
+    font-style:italic;
+    color:var(--cream-muted);
+    margin-bottom:2.5rem;
+    max-width:500px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .bottom-cta .cta-btn,
+  .bottom-cta .buy-in{
+    opacity:1;
+    animation:none;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    text-align:center;
+    padding:2rem;
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.7rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:rgba(201,193,180,.3);
+    border-top:1px solid rgba(212,168,83,.06);
+  }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+
+  .reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HERO / THEATER ========== -->
+<section class="hero">
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-outer">
+      <div class="marquee-lights" id="marquee-lights"></div>
+      <div class="marquee-inner">
+        <p class="marquee-top">98th Academy Awards</p>
+        <h1 class="marquee-title">Oscar <span class="gold">Ballot</span></h1>
+        <p class="marquee-subtitle">Pick your winners. Bet five bucks. Winner takes all.</p>
+        <div class="marquee-info">
+          <span>March 15, 2026</span>
+          <span>Dolby Theatre</span>
+          <span>Hosted by Conan O'Brien</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOW SHOWING: BEST PICTURE SIGNS -->
+  <div class="now-showing">
+    <p class="now-showing-label">Now Showing / Best Picture Nominees <span class="click-hint">Click a poster for a fun fact</span></p>
+    <div class="theater-signs">
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/rSdOua3wKMEaFWDcKAYWRjXQWOt.jpg" alt="Bugonia poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">Bugonia</div>
+              <div class="sign-noms">Emma Stone</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">The film's co-lead Aidan Delbis had never acted before. Lanthimos specifically sought a neurodivergent, non-professional actor to create a different dynamic alongside Stone and Plemons.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/vqBmyAj0Xm9LnS1xe1MSlMAJyHq.jpg" alt="F1 poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">F1</div>
+              <div class="sign-noms">Brad Pitt</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">Brad Pitt and Damson Idris drove modified Formula 2 cars at up to 180 mph during actual Grand Prix weekends, sometimes filming three scenes in just 15 minutes between real races.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg" alt="Frankenstein poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">Frankenstein</div>
+              <div class="sign-noms"><strong>9</strong> noms</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">Del Toro had only nine weeks to completely redesign the Creature's look for Jacob Elordi after the role was originally built for Andrew Garfield's frame.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/vbeyOZm2bvBXcbgPD3v6o94epPX.jpg" alt="Hamnet poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">Hamnet</div>
+              <div class="sign-noms">Jessie Buckley</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">The actors playing young Hamnet and adult Hamlet-the-play are real-life brothers (Jacobi and Noah Jupe), which helped sell the devastating moment when Agnes sees her dead son as he might have grown up.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/lYWEXbQgRTR4ZQleSXAgRbxAjvq.jpg" alt="Marty Supreme poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">Marty Supreme</div>
+              <div class="sign-noms">Timothee Chalamet</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">Chalamet trained in table tennis for years starting in 2018. Safdie wanted his eyes to look "beadier," so he doubled up glasses and contacts, giving Chalamet a full-blown eye infection he wore as a badge of honor.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign frontrunner-sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/lbBWwxBht4JFP5PsuJ5onpMqugW.jpg" alt="One Battle After Another poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">One Battle After Another</div>
+              <div class="sign-noms"><strong>13</strong> noms</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">Shot using VistaVision, a widescreen format that hadn't been widely used since the 1960s. At $130-175M, it's by far PTA's most expensive film, and became his highest-grossing at $204M worldwide.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/rZqolYhxMEe6TZZTjSmFw9crDTD.jpg" alt="The Secret Agent poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">The Secret Agent</div>
+              <div class="sign-noms">Wagner Moura</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">The film was Udo Kier's final feature role before his death in November 2025, reuniting him with director Kleber Mendon&#231;a Filho after Bacurau.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/pz9NCWxxOk3o0W3v1Zkhawrwb4i.jpg" alt="Sentimental Value poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">Sentimental Value</div>
+              <div class="sign-noms">Joachim Trier</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">The film received a 19-minute standing ovation at its Cannes premiere. Trier drew heavily from his own family history: his grandfather was a director and his parents worked in cinema.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign frontrunner-sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/qTvFWCGeGXgBRaINLY1zqgTPSpn.jpg" alt="Sinners poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">Sinners</div>
+              <div class="sign-noms"><strong>16</strong> noms / record</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">Some of the 1930s costumes were originally made by Ruth E. Carter for the stalled Marvel Blade film. Marvel let Carter buy back her own designs and repurpose them for Coogler's film.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+      <div class="sign">
+        <div class="sign-inner">
+          <div class="sign-front">
+            <div class="sign-poster"><img src="https://image.tmdb.org/t/p/w500/wfzYOVdafdbD1d3SxNqiBtV2Yhx.jpg" alt="Train Dreams poster" loading="lazy"></div>
+            <div class="sign-info">
+              <div class="sign-title">Train Dreams</div>
+              <div class="sign-noms">Joel Edgerton</div>
+            </div>
+          </div>
+          <div class="sign-back">
+            <div class="fun-fact-label">Fun Fact</div>
+            <div class="fun-fact">Director Clint Bentley had only 29 days to shoot the entire film, a schedule so tight the team had to abandon their plan to shoot on film and go digital instead.</div>
+            <div class="tap-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="hero-cta">
+    <a href="https://tally.so/r/Y5Okb5" target="_blank" class="cta-btn">Submit Your Ballot</a>
+    <span class="buy-in"><strong>$5 buy-in.</strong> Most correct picks wins the pot.</span>
+  </div>
+
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="how-section">
+  <div class="deco-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+  <p class="section-label">How It Works</p>
+  <h2 class="section-title">Three Steps to Glory</h2>
+  <div class="steps">
+    <div class="step reveal">
+      <span class="step-num">1</span>
+      <h3>Fill Out Your Ballot</h3>
+      <p>Pick your winners across 20 categories. Trust your gut, consult the critics, or just go with the best poster.</p>
+    </div>
+    <div class="step reveal">
+      <span class="step-num">2</span>
+      <h3>Venmo $5</h3>
+      <p>Send $5 to Carly on Venmo. That's your entry fee. No payment, no glory.</p>
+    </div>
+    <div class="step reveal">
+      <span class="step-num">3</span>
+      <h3>Watch & Win</h3>
+      <p>Tune in on March 15. The person with the most correct picks takes home the entire pot.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CATEGORIES ========== -->
+<section class="categories-section">
+  <div class="deco-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+  <p class="section-label">The Nominees</p>
+  <h2 class="section-title">20 Categories. Your Call.</h2>
+
+  <div class="categories-grid">
+
+    <div class="category-card reveal">
+      <h3>Best Picture</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Bugonia</li>
+        <li><span class="nominee-dot"></span>F1</li>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>Hamnet</li>
+        <li><span class="nominee-dot"></span>Marty Supreme</li>
+        <li><span class="nominee-dot"></span>One Battle After Another</li>
+        <li><span class="nominee-dot"></span>The Secret Agent</li>
+        <li><span class="nominee-dot"></span>Sentimental Value</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+        <li><span class="nominee-dot"></span>Train Dreams</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Director</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Chloe Zhao <span class="film">Hamnet</span></li>
+        <li><span class="nominee-dot"></span>Josh Safdie <span class="film">Marty Supreme</span></li>
+        <li><span class="nominee-dot"></span>Paul Thomas Anderson <span class="film">One Battle After Another</span></li>
+        <li><span class="nominee-dot"></span>Joachim Trier <span class="film">Sentimental Value</span></li>
+        <li><span class="nominee-dot"></span>Ryan Coogler <span class="film">Sinners</span></li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Actor</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Timothee Chalamet <span class="film">Marty Supreme</span></li>
+        <li><span class="nominee-dot"></span>Leonardo DiCaprio <span class="film">One Battle After Another</span></li>
+        <li><span class="nominee-dot"></span>Ethan Hawke <span class="film">Blue Moon</span></li>
+        <li><span class="nominee-dot"></span>Michael B. Jordan <span class="film">Sinners</span></li>
+        <li><span class="nominee-dot"></span>Wagner Moura <span class="film">The Secret Agent</span></li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Actress</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Jessie Buckley <span class="film">Hamnet</span></li>
+        <li><span class="nominee-dot"></span>Rose Byrne <span class="film">If I Had Legs I'd Kick You</span></li>
+        <li><span class="nominee-dot"></span>Kate Hudson <span class="film">Song Sung Blue</span></li>
+        <li><span class="nominee-dot"></span>Renate Reinsve <span class="film">Sentimental Value</span></li>
+        <li><span class="nominee-dot"></span>Emma Stone <span class="film">Bugonia</span></li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Supporting Actor</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Benicio Del Toro <span class="film">One Battle After Another</span></li>
+        <li><span class="nominee-dot"></span>Jacob Elordi <span class="film">Frankenstein</span></li>
+        <li><span class="nominee-dot"></span>Delroy Lindo <span class="film">Sinners</span></li>
+        <li><span class="nominee-dot"></span>Sean Penn <span class="film">One Battle After Another</span></li>
+        <li><span class="nominee-dot"></span>Stellan Skarsgard <span class="film">Sentimental Value</span></li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Supporting Actress</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Elle Fanning <span class="film">Sentimental Value</span></li>
+        <li><span class="nominee-dot"></span>Inga Ibsdottir Lilleaas <span class="film">Sentimental Value</span></li>
+        <li><span class="nominee-dot"></span>Amy Madigan <span class="film">Weapons</span></li>
+        <li><span class="nominee-dot"></span>Wunmi Mosaku <span class="film">Sinners</span></li>
+        <li><span class="nominee-dot"></span>Teyana Taylor <span class="film">One Battle After Another</span></li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Original Screenplay</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Blue Moon</li>
+        <li><span class="nominee-dot"></span>It Was Just an Accident</li>
+        <li><span class="nominee-dot"></span>Marty Supreme</li>
+        <li><span class="nominee-dot"></span>Sentimental Value</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Adapted Screenplay</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Bugonia</li>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>Hamnet</li>
+        <li><span class="nominee-dot"></span>One Battle After Another</li>
+        <li><span class="nominee-dot"></span>Train Dreams</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Animated Feature</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Arco</li>
+        <li><span class="nominee-dot"></span>Elio</li>
+        <li><span class="nominee-dot"></span>KPop Demon Hunters</li>
+        <li><span class="nominee-dot"></span>Little Amelie</li>
+        <li><span class="nominee-dot"></span>Zootopia 2</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best International Feature</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>It Was Just an Accident</li>
+        <li><span class="nominee-dot"></span>Sentimental Value</li>
+        <li><span class="nominee-dot"></span>Sirat</li>
+        <li><span class="nominee-dot"></span>The Secret Agent</li>
+        <li><span class="nominee-dot"></span>The Voice of Hind Rajab</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Documentary Feature</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>The Alabama Solution</li>
+        <li><span class="nominee-dot"></span>Come See Me in the Good Light</li>
+        <li><span class="nominee-dot"></span>Cutting Through Rocks</li>
+        <li><span class="nominee-dot"></span>Mr. Nobody Against Putin</li>
+        <li><span class="nominee-dot"></span>The Perfect Neighbor</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Cinematography</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>Marty Supreme</li>
+        <li><span class="nominee-dot"></span>One Battle After Another</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+        <li><span class="nominee-dot"></span>Train Dreams</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Film Editing</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>F1</li>
+        <li><span class="nominee-dot"></span>Marty Supreme</li>
+        <li><span class="nominee-dot"></span>One Battle After Another</li>
+        <li><span class="nominee-dot"></span>Sentimental Value</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Production Design</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>Hamnet</li>
+        <li><span class="nominee-dot"></span>Marty Supreme</li>
+        <li><span class="nominee-dot"></span>One Battle After Another</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Costume Design</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Avatar: Fire and Ash</li>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>Hamnet</li>
+        <li><span class="nominee-dot"></span>Marty Supreme</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Original Score</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Bugonia</li>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>Hamnet</li>
+        <li><span class="nominee-dot"></span>One Battle After Another</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Original Song</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>"Dear Me" <span class="film">Diana Warren: Relentless</span></li>
+        <li><span class="nominee-dot"></span>"Golden" <span class="film">KPop Demon Hunters</span></li>
+        <li><span class="nominee-dot"></span>"I Lied to You" <span class="film">Sinners</span></li>
+        <li><span class="nominee-dot"></span>"Sweet Dreams of Joy" <span class="film">Viva Verdi!</span></li>
+        <li><span class="nominee-dot"></span>"Train Dreams" <span class="film">Train Dreams</span></li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Sound</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>F1</li>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>One Battle After Another</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+        <li><span class="nominee-dot"></span>Sirat</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Visual Effects</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Avatar: Fire and Ash</li>
+        <li><span class="nominee-dot"></span>F1</li>
+        <li><span class="nominee-dot"></span>Jurassic World Rebirth</li>
+        <li><span class="nominee-dot"></span>The Lost Bus</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+      </ul>
+    </div>
+
+    <div class="category-card reveal">
+      <h3>Best Makeup and Hairstyling</h3>
+      <ul>
+        <li><span class="nominee-dot"></span>Frankenstein</li>
+        <li><span class="nominee-dot"></span>Kokuho</li>
+        <li><span class="nominee-dot"></span>Sinners</li>
+        <li><span class="nominee-dot"></span>The Smashing Machine</li>
+        <li><span class="nominee-dot"></span>The Ugly Stepsister</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========== BOTTOM CTA ========== -->
+<section class="bottom-cta">
+  <div class="deco-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+  <p class="section-label">Ready?</p>
+  <h2 class="section-title">Lock In Your Picks</h2>
+  <p>Ballots close before the ceremony on March 15. Don't forget to Venmo your $5.</p>
+  <a href="https://tally.so/r/Y5Okb5" target="_blank" class="cta-btn">Submit Your Ballot</a>
+  <span class="buy-in"><strong>$5 buy-in.</strong> Most correct picks wins the pot.</span>
+</section>
+
+<footer>
+  A Carly Valancy Production / Oscars 2026
+</footer>
+
+<script>
+// Generate chaser lights around the marquee border
+const lightsContainer = document.getElementById('marquee-lights');
+const marqueeOuter = document.querySelector('.marquee-outer');
+
+function generateLights() {
+  if (!marqueeOuter) return;
+  const rect = marqueeOuter.getBoundingClientRect();
+  const w = rect.width + 16;
+  const h = rect.height + 16;
+  const spacing = 22;
+  const bulbs = [];
+
+  // Top edge
+  for (let x = 0; x < w; x += spacing) {
+    bulbs.push({ left: x + 'px', top: '-3px' });
+  }
+  // Right edge
+  for (let y = spacing; y < h; y += spacing) {
+    bulbs.push({ left: (w - 3) + 'px', top: y + 'px' });
+  }
+  // Bottom edge
+  for (let x = w - spacing; x >= 0; x -= spacing) {
+    bulbs.push({ left: x + 'px', top: (h - 3) + 'px' });
+  }
+  // Left edge
+  for (let y = h - spacing; y > 0; y -= spacing) {
+    bulbs.push({ left: '-3px', top: y + 'px' });
+  }
+
+  lightsContainer.innerHTML = '';
+  bulbs.forEach((pos, i) => {
+    const bulb = document.createElement('div');
+    bulb.className = 'bulb';
+    bulb.style.left = pos.left;
+    bulb.style.top = pos.top;
+    // Stagger the animation slightly per bulb for a wave effect
+    bulb.style.animationDelay = (i % 3 === 0 ? '0s' : i % 3 === 1 ? '.4s' : '.8s');
+    lightsContainer.appendChild(bulb);
+  });
+}
+
+// Generate on load and resize
+window.addEventListener('load', generateLights);
+window.addEventListener('resize', generateLights);
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Flip cards on click
+document.querySelectorAll('.sign').forEach(sign => {
+  sign.addEventListener('click', () => {
+    sign.classList.toggle('flipped');
+  });
+});
+</script>
+
+</body>
+</html>

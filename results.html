@@ -831,7 +831,7 @@ const categories = [
 ];
 
 // ============ STATE ============
-// Winners stored in localStorage so they persist across refreshes
+const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019cf321-4aac-7cfe-97bb-17a60c175d94';
 const STORAGE_KEY = 'oscar2026_winners';
 
 function loadWinners() {
@@ -841,11 +841,32 @@ function loadWinners() {
   } catch { return {}; }
 }
 
-function saveWinners(winners) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(winners));
+function saveWinners(w) {
+  // Save locally
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(w));
+  // Sync to cloud so public page picks it up
+  fetch(BLOB_URL, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ winners: w })
+  }).catch(() => {});
 }
 
-let winners = loadWinners(); // { categoryName: winnerNomineeName }
+// Load from cloud on startup to stay in sync
+async function initWinners() {
+  try {
+    const res = await fetch(BLOB_URL);
+    const data = await res.json();
+    if (data.winners && Object.keys(data.winners).length > 0) {
+      winners = data.winners;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(winners));
+      renderLeaderboard();
+      renderCategories();
+    }
+  } catch {}
+}
+
+let winners = loadWinners();
 
 // ============ SCORING ============
 function calcScores() {
@@ -1014,6 +1035,7 @@ function renderCategories() {
 // ============ INIT ============
 renderLeaderboard();
 renderCategories();
+initWinners();
 </script>
 
 </body>
