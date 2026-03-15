@@ -86,7 +86,7 @@
   .splash .s-stars{
     display:flex;
     gap:.5rem;
-    margin-bottom:1.5rem;
+    margin-bottom:1rem;
     opacity:0;
     animation:fadeUp .8s ease .3s forwards;
   }
@@ -110,7 +110,7 @@
     color:var(--gold);
     opacity:0;
     animation:fadeUp .6s ease .5s forwards;
-    margin-bottom:1.5rem;
+    margin-bottom:1rem;
     position:relative;
     z-index:2;
   }
@@ -118,7 +118,7 @@
   .splash .s-photo-wrap{
     position:relative;
     cursor:pointer;
-    margin-bottom:1.5rem;
+    margin-bottom:.5rem;
     opacity:0;
     animation:photoReveal 1.2s ease .8s forwards;
     z-index:2;
@@ -131,16 +131,18 @@
   }
 
   .splash .s-photo{
-    width:clamp(180px, 35vw, 280px);
+    width:clamp(140px, 28vw, 220px);
     height:auto;
     display:block;
-    filter:drop-shadow(0 0 40px rgba(212,168,83,.2)) drop-shadow(0 20px 40px rgba(0,0,0,.5));
+    filter:drop-shadow(0 0 40px rgba(212,168,83,.2));
     transition:transform .4s ease, filter .4s ease;
+    -webkit-mask-image:linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image:linear-gradient(to bottom, black 60%, transparent 100%);
   }
 
   .splash .s-photo-wrap:hover .s-photo{
     transform:scale(1.05);
-    filter:drop-shadow(0 0 60px rgba(212,168,83,.35)) drop-shadow(0 20px 40px rgba(0,0,0,.5));
+    filter:drop-shadow(0 0 60px rgba(212,168,83,.35));
   }
 
   .splash .s-photo-ring{
