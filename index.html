@@ -60,6 +60,7 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
+    padding:2rem 1.5rem;
     transition:opacity .8s ease, visibility .8s ease;
     overflow:hidden;
   }
@@ -194,14 +195,71 @@
     z-index:2;
   }
 
+  .splash .s-countdown{
+    display:flex;
+    gap:1.2rem;
+    margin-top:1.8rem;
+    opacity:0;
+    animation:fadeUp .6s ease 1.6s forwards;
+    position:relative;
+    z-index:2;
+  }
+
+  .splash .s-countdown .cd-unit{
+    text-align:center;
+  }
+
+  .splash .s-countdown .cd-num{
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:clamp(1.5rem, 3.5vw, 2.2rem);
+    color:var(--white);
+    line-height:1;
+  }
+
+  .splash .s-countdown .cd-label{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.5rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--gold-dark);
+    margin-top:.2rem;
+  }
+
+  .splash .s-countdown .cd-sep{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.2rem, 3vw, 1.8rem);
+    color:var(--gold);
+    align-self:flex-start;
+    margin-top:.1rem;
+    opacity:.4;
+  }
+
+  .splash .s-countdown.show-over .cd-num{
+    color:var(--gold);
+  }
+
+  .splash .s-countdown-msg{
+    font-family:'Archivo Narrow',sans-serif;
+    font-size:.6rem;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-top:1.2rem;
+    opacity:0;
+    animation:fadeUp .6s ease 1.8s forwards;
+    position:relative;
+    z-index:2;
+  }
+
   .splash .s-enter{
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
     font-size:clamp(.8rem, 1.5vw, 1rem);
     color:var(--cream-muted);
-    margin-top:2rem;
+    margin-top:1.5rem;
     opacity:0;
-    animation:fadeUp .6s ease 2s forwards, enterPulse 2s ease 2.6s infinite;
+    animation:fadeUp .6s ease 2.2s forwards, enterPulse 2s ease 2.8s infinite;
     position:relative;
     z-index:2;
   }
@@ -766,6 +824,14 @@
   </div>
   <div class="s-title">Valancy <span class="s-gold">Muralles</span></div>
   <div class="s-production">Production</div>
+  <div class="s-countdown" id="countdown">
+    <div class="cd-unit"><div class="cd-num" id="cd-hrs">0</div><div class="cd-label">Hours</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-min">0</div><div class="cd-label">Min</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-sec">0</div><div class="cd-label">Sec</div></div>
+  </div>
+  <div class="s-countdown-msg" id="cd-msg">Until showtime</div>
   <div class="s-enter">tap to enter</div>
 </div>
 
@@ -1236,12 +1302,42 @@ document.getElementById('splash-enter').addEventListener('click', () => {
   document.getElementById('splash').classList.add('dismissed');
 });
 
-// Also allow clicking anywhere on splash after a delay
 setTimeout(() => {
   document.getElementById('splash').addEventListener('click', () => {
     document.getElementById('splash').classList.add('dismissed');
   });
 }, 2500);
+
+// ============ COUNTDOWN ============
+// Oscars start at 7:00 PM ET on March 15, 2026
+const oscarsStart = new Date('2026-03-15T19:00:00-04:00').getTime();
+
+function updateCountdown() {
+  const now = Date.now();
+  const diff = oscarsStart - now;
+  const cdMsg = document.getElementById('cd-msg');
+  const cdEl = document.getElementById('countdown');
+
+  if (diff <= 0) {
+    document.getElementById('cd-hrs').textContent = '0';
+    document.getElementById('cd-min').textContent = '0';
+    document.getElementById('cd-sec').textContent = '0';
+    cdMsg.textContent = "It's showtime";
+    cdEl.classList.add('show-over');
+    return;
+  }
+
+  const hrs = Math.floor(diff / 3600000);
+  const min = Math.floor((diff % 3600000) / 60000);
+  const sec = Math.floor((diff % 60000) / 1000);
+
+  document.getElementById('cd-hrs').textContent = hrs;
+  document.getElementById('cd-min').textContent = String(min).padStart(2, '0');
+  document.getElementById('cd-sec').textContent = String(sec).padStart(2, '0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 // ============ INIT ============
 renderLeaderboard();
