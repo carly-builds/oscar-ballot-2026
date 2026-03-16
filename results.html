@@ -515,6 +515,28 @@
     border-top:1px solid rgba(212,168,83,.06);
   }
 
+  /* ============ FIREWORKS ============ */
+  .fireworks-container{
+    position:fixed;
+    inset:0;
+    z-index:9998;
+    pointer-events:none;
+    overflow:hidden;
+  }
+
+  .firework{
+    position:absolute;
+    width:4px;height:4px;
+    border-radius:50%;
+  }
+
+  .firework-trail{
+    position:absolute;
+    width:3px;height:3px;
+    border-radius:50%;
+    opacity:0;
+  }
+
   /* ============ RESPONSIVE ============ */
   @media(max-width:700px){
     .player-header .ph-name{
@@ -528,6 +550,8 @@
 </style>
 </head>
 <body>
+
+<div class="fireworks-container" id="fireworks"></div>
 
 <div class="header">
   <p class="header-top">Valancy Muralles Production / Admin</p>
@@ -1064,10 +1088,12 @@ function renderCategories() {
 
       // Click to set/unset winner
       row.addEventListener('click', () => {
-        if (winners[cat.name] === nom) {
+        const wasWinner = winners[cat.name] === nom;
+        if (wasWinner) {
           delete winners[cat.name];
         } else {
           winners[cat.name] = nom;
+          launchFireworks();
         }
         saveWinners(winners);
         renderLeaderboard();
@@ -1086,6 +1112,75 @@ function renderCategories() {
     block.appendChild(body);
     container.appendChild(block);
   });
+}
+
+// ============ FIREWORKS ============
+function launchFireworks() {
+  const container = document.getElementById('fireworks');
+  const colors = ['#d4a853','#e8c97a','#ffffff','#f5f0e8','#b08930','#ffd700','#ff6b35','#6aad6a'];
+  const bursts = 5;
+
+  for (let b = 0; b < bursts; b++) {
+    const cx = Math.random() * window.innerWidth;
+    const cy = Math.random() * window.innerHeight * 0.6 + window.innerHeight * 0.1;
+    const delay = b * 300 + Math.random() * 200;
+    const particles = 30 + Math.floor(Math.random() * 20);
+
+    setTimeout(() => {
+      for (let i = 0; i < particles; i++) {
+        const el = document.createElement('div');
+        el.className = 'firework';
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const angle = (i / particles) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+        const speed = 60 + Math.random() * 120;
+        const dx = Math.cos(angle) * speed;
+        const dy = Math.sin(angle) * speed;
+        const size = 2 + Math.random() * 4;
+
+        el.style.left = cx + 'px';
+        el.style.top = cy + 'px';
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.background = color;
+        el.style.boxShadow = `0 0 ${size + 2}px ${color}`;
+        el.style.transition = `all ${0.8 + Math.random() * 0.8}s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+        container.appendChild(el);
+
+        requestAnimationFrame(() => {
+          el.style.transform = `translate(${dx}px, ${dy + 40}px)`;
+          el.style.opacity = '0';
+        });
+
+        setTimeout(() => el.remove(), 2000);
+      }
+
+      // Trailing sparkles
+      for (let t = 0; t < 10; t++) {
+        setTimeout(() => {
+          const sparkle = document.createElement('div');
+          sparkle.className = 'firework-trail';
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          sparkle.style.left = (cx + (Math.random() - 0.5) * 100) + 'px';
+          sparkle.style.top = (cy + (Math.random() - 0.5) * 60) + 'px';
+          sparkle.style.width = '2px';
+          sparkle.style.height = '2px';
+          sparkle.style.background = color;
+          sparkle.style.boxShadow = `0 0 4px ${color}`;
+          sparkle.style.transition = 'all 0.6s ease-out';
+          container.appendChild(sparkle);
+
+          requestAnimationFrame(() => {
+            sparkle.style.opacity = '1';
+            sparkle.style.transform = `translateY(${20 + Math.random() * 30}px)`;
+            setTimeout(() => {
+              sparkle.style.opacity = '0';
+              setTimeout(() => sparkle.remove(), 600);
+            }, 300);
+          });
+        }, t * 50);
+      }
+    }, delay);
+  }
 }
 
 // ============ INIT ============
